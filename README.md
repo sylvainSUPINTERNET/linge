@@ -1,6 +1,26 @@
+  Use your OAuth2 credentials to test it ( export env variable in your terminal where you run the project)
+  
+    "client_id": process.env.REACT_APP_GOOGLE_OAUTH2_CLIENTID,
+    "client_secret": process.env.REACT_APP_GOOGLE_OAUTH2_SECRET
+
 POST -> https://www.googleapis.com/oauth2/v4/token to get token with OAuth2 parameters
 
 
+
+# OAuth2 ( authorized / authenticate ) flows : 
+
+                    // -- FLOWS --
+                    // user logged => get 3 tokens
+                    // Change generated token when user login in redis db by the new refresh token
+                    // save in localStorage access token / id_token
+
+                    // -- Info --
+                    // access_token => short live to request Google API (related to scoped associated)  => keep in localStorage
+                    // refresh_token => keep it in safe place ( long live time, use it to revoke ) => associate user email with this token in redis db
+                    // id_token => contains user detail ( no sensitive data ) => keep in localStorage
+
+* Keep in mind *
+With refresh token, we can ask for a new access_token to use Google API for X reason
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
