@@ -39,6 +39,7 @@ export const Home = () => {
                     // will be decoded / save in DB 
                     // IF no error => redierec tto /
                     // IF error => redirect to page with error message + BTN retry to connect
+                    
                     window.location.href = "/";
                 }
             })
