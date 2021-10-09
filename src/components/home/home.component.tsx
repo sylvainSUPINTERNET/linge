@@ -1,18 +1,21 @@
 import { Redirect, useLocation } from "react-router-dom";
 import React, { useLayoutEffect, useState } from "react";
 import { googleOauthConfig } from "../../configuration/oauth2/google.oauth2";
+import { config } from "../../configuration/api/config";
+import { ICreateUser } from "../../configuration/api/dto/ICreateUser";
 
 export const Home = () => {
-    console.log("HOME CALL");
     let location = useLocation();
     const search = location.search;
+
+    const openOAuthGoogleAuthorizeModal = () => {
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/drive.metadata.readonly https%3A//www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile email openid profile&prompt=consent&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=${encodeURIComponent(googleOauthConfig.redirect_uri)}&client_id=${googleOauthConfig.client_id}`
+    }
+
 
     useLayoutEffect(() => {
         const oauthAuthorizationCode = new URLSearchParams(search).get('code');
         if ( oauthAuthorizationCode ) {
-            console.log("FROM oauth2");
-            console.log("code : ", oauthAuthorizationCode);
-
             fetch('https://www.googleapis.com/oauth2/v4/token', {
                 method: "POST",
                 headers: {
@@ -30,31 +33,56 @@ export const Home = () => {
                 if ( details.error || details.error_description || response.status !== 200 ) {
                     console.log("OAuth2 ERR", details, response.status);
                 } else {
-                    console.log(details);
-                    localStorage.setItem("linge_access_token", details.access_token);
-                    localStorage.setItem("linge_id_token", details.id_token);
+                    const {access_token, id_token, refresh_token} = details;
+                    localStorage.setItem("linge_access_token", access_token);
+                    localStorage.setItem("linge_id_token", id_token);
 
-                    // TODO : WIP => container using redis to save email user ( decode the id_token ) with the refresh token associated
-                    // TODO send with Authorized brear header the token 
-                    // will be decoded / save in DB 
-                    // IF no error => redierec tto /
-                    // IF error => redirect to page with error message + BTN retry to connect
+                    console.log(`${googleOauthConfig.URL_user_info}${access_token}`)
+
+                    const respInfo = await fetch(`${googleOauthConfig.URL_user_info}${access_token}`);
+                    const profileData = await respInfo.json();
                     
-                    window.location.href = "/";
+                    // TEST
+                    console.log(details);
+                    console.log(profileData)
+
+                    let newUser: ICreateUser = {
+                        "email": profileData.email,
+                        "oauthProvider": "google",
+                        "refreshToken": refresh_token
+                    }
+                    const resp = await fetch(`${config.URL}/users`, {
+                        "headers": {
+                            "Content-Type":"application/json"
+                        },
+                        "method": "POST",
+                        "body": JSON.stringify(newUser)
+                    })
+
+                    if ( resp.status === 200 ) {
+                        window.location.href = "/";
+                    } else {
+                        alert("Authenticated has failed, please retry");
+                    }
+
                 }
             })
             .catch( err => console.log("OAuth2 ERR ", err))
         }
     }, []);
 
-
     return (
     
         <div>
             <h1>Home</h1>
-                <a href={`https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/drive.metadata.readonly email openid profile&prompt=consent&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=${encodeURIComponent(googleOauthConfig.redirect_uri)}&client_id=${googleOauthConfig.client_id}`}>
+                <button type="button" className="login-with-google-btn" onClick={openOAuthGoogleAuthorizeModal}>
+                Sign in with Google
+                </button>
+
+                {/* <a href={`https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/drive.metadata.readonly https%3A//www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile email openid profile&prompt=consent&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=${encodeURIComponent(googleOauthConfig.redirect_uri)}&client_id=${googleOauthConfig.client_id}`}>
                     Connect with Google
-                </a>
+                </a> */}
         </div>
     )
 }
+
