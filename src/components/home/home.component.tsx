@@ -5,83 +5,102 @@ import { config } from "../../configuration/api/config";
 import { ICreateUser } from "../../configuration/api/dto/ICreateUser";
 
 export const Home = () => {
-    let location = useLocation();
-    const search = location.search;
+    // let location = useLocation();
+    // const search = location.search;
 
-    const openOAuthGoogleAuthorizeModal = () => {
-        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/drive.metadata.readonly https%3A//www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile email openid profile&prompt=consent&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=${encodeURIComponent(googleOauthConfig.redirect_uri)}&client_id=${googleOauthConfig.client_id}`
-    }
+    // const openOAuthGoogleAuthorizeModal = () => {
+    //     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/drive.metadata.readonly https%3A//www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile email openid profile&prompt=consent&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=${encodeURIComponent(googleOauthConfig.redirect_uri)}&client_id=${googleOauthConfig.client_id}`
+    // }
 
 
-    useLayoutEffect(() => {
-        const oauthAuthorizationCode = new URLSearchParams(search).get('code');
-        if ( oauthAuthorizationCode ) {
-            fetch('https://www.googleapis.com/oauth2/v4/token', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                },
-                body: new URLSearchParams({
-                    'code': oauthAuthorizationCode,
-                    'client_id': `${googleOauthConfig.client_id}`,
-                    'client_secret': `${googleOauthConfig.client_secret}`,
-                    'grant_type': 'authorization_code',
-                    'redirect_uri': `${googleOauthConfig.redirect_uri}`
-                })
-            }).then( async response => {
-                const details = await response.json();
-                if ( details.error || details.error_description || response.status !== 200 ) {
-                    console.log("OAuth2 ERR", details, response.status);
-                } else {
-                    const {access_token, id_token, refresh_token} = details;
-                    localStorage.setItem("linge_access_token", access_token);
-                    localStorage.setItem("linge_id_token", id_token);
+    // useLayoutEffect(() => {
+    //     const oauthAuthorizationCode = new URLSearchParams(search).get('code');
+    //     if ( oauthAuthorizationCode ) {
+    //         fetch('https://www.googleapis.com/oauth2/v4/token', {
+    //             method: "POST",
+    //             headers: {
+    //                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    //             },
+    //             body: new URLSearchParams({
+    //                 'code': oauthAuthorizationCode,
+    //                 'client_id': `${googleOauthConfig.client_id}`,
+    //                 'client_secret': `${googleOauthConfig.client_secret}`,
+    //                 'grant_type': 'authorization_code',
+    //                 'redirect_uri': `${googleOauthConfig.redirect_uri}`
+    //             })
+    //         }).then( async response => {
+    //             const details = await response.json();
+    //             if ( details.error || details.error_description || response.status !== 200 ) {
+    //                 console.log("OAuth2 ERR", details, response.status);
+    //             } else {
+    //                 const {access_token, id_token, refresh_token} = details;
+    //                 localStorage.setItem("linge_access_token", access_token);
+    //                 localStorage.setItem("linge_id_token", id_token);
 
-                    console.log(`${googleOauthConfig.URL_user_info}${access_token}`)
+    //                 console.log(`${googleOauthConfig.URL_user_info}${access_token}`)
 
-                    const respInfo = await fetch(`${googleOauthConfig.URL_user_info}${access_token}`);
-                    const profileData = await respInfo.json();
+    //                 const respInfo = await fetch(`${googleOauthConfig.URL_user_info}${access_token}`);
+    //                 const profileData = await respInfo.json();
                     
-                    // TEST
-                    console.log(details);
-                    console.log(profileData)
+    //                 // TEST
+    //                 console.log(details);
+    //                 console.log(profileData)
 
-                    let newUser: ICreateUser = {
-                        "email": profileData.email,
-                        "oauthProvider": "google",
-                        "refreshToken": refresh_token
-                    }
-                    const resp = await fetch(`${config.URL}/users`, {
-                        "headers": {
-                            "Content-Type":"application/json"
-                        },
-                        "method": "POST",
-                        "body": JSON.stringify(newUser)
-                    })
+    //                 let newUser: ICreateUser = {
+    //                     "email": profileData.email,
+    //                     "oauthProvider": "google",
+    //                     "refreshToken": refresh_token
+    //                 }
+    //                 const resp = await fetch(`${config.URL}/users`, {
+    //                     "headers": {
+    //                         "Content-Type":"application/json"
+    //                     },
+    //                     "method": "POST",
+    //                     "body": JSON.stringify(newUser)
+    //                 })
 
-                    if ( resp.status === 200 ) {
-                        window.location.href = "/";
-                    } else {
-                        alert("Authenticated has failed, please retry");
-                    }
+    //                 if ( resp.status === 200 ) {
+    //                     window.location.href = "/";
+    //                 } else {
+    //                     alert("Authenticated has failed, please retry");
+    //                 }
 
-                }
-            })
-            .catch( err => console.log("OAuth2 ERR ", err))
-        }
-    }, []);
+    //             }
+    //         })
+    //         .catch( err => console.log("OAuth2 ERR ", err))
+    //     }
+    // }, []);
 
     return (
     
-        <div>
-            <h1>Home</h1>
-                <button type="button" className="login-with-google-btn" onClick={openOAuthGoogleAuthorizeModal}>
-                Sign in with Google
-                </button>
+        <div className="container mt-5">
+            <div className="d-flex" style={{"flexFlow": "wrap"}}>
 
-                {/* <a href={`https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/drive.metadata.readonly https%3A//www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile email openid profile&prompt=consent&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=${encodeURIComponent(googleOauthConfig.redirect_uri)}&client_id=${googleOauthConfig.client_id}`}>
-                    Connect with Google
-                </a> */}
+            <div className="card m-2" style={{"width": "18rem"}}>
+            <div className="card-body">
+                <h5 className="card-title">Card title</h5>
+                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" className="btn btn-primary">Go somewhere</a>
+            </div>
+            </div>
+            
+            <div className="card m-2" style={{"width": "18rem"}}>
+            <div className="card-body">
+                <h5 className="card-title">Card title</h5>
+                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" className="btn btn-primary">Go somewhere</a>
+            </div>
+            </div>
+            
+            <div className="card m-2" style={{"width": "18rem"}}>
+            <div className="card-body">
+                <h5 className="card-title">Card title</h5>
+                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" className="btn btn-primary">Go somewhere</a>
+            </div>
+            </div>
+
+            </div> 
         </div>
     )
 }
