@@ -1,0 +1,20 @@
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #8064A2 !important;
+    border-color:#8064A2;
+    background-image: linear-gradient(to right, #4568DC 0%, #B06AB3  100%, #4568DC  100%)
+}
+ .btn-grad:hover {
+   background-position: right center; /* change the direction of the change here */
+   color: #fff;
+   text-decoration: none;
+ }
+
+ #dis {
+    background-color: #8064A2 !important;
+    border-color:#8064A2;
+    background-image: linear-gradient(to right, #4568DC 0%, #B06AB3  100%, #4568DC  100%)
+ }
+
+#profilePic {
+    border-radius: 50% !important
+}
