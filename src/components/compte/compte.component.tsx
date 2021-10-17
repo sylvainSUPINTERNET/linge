@@ -10,6 +10,8 @@ import {TiTick} from "react-icons/ti";
 import jwt_decode from "jwt-decode";
 
 import './compte.component.css'; // Tell webpack that Button.js uses these styles
+import { profiles } from "../../configuration/api/profiles/profiles.api";
+import { IProfile } from "../../configuration/api/dto/IProfile";
 
 
 interface OAuth2Claims {
@@ -24,7 +26,16 @@ interface OAuth2ClaimsGoogle extends OAuth2Claims {
 }   
 
 export const Compte = () => {
-    
+
+    profiles.getMyProfile(localStorage.getItem('linge_id_token') as string).then( async resp => {
+        if ( resp.status === 200 ) {
+            const data = await resp.json();
+            setExistingProfile(data as IProfile);
+        }
+    }).catch( err => console.log(err))
+
+    let [existingProfile, setExistingProfile] = useState<IProfile>();
+
     const inputElHobby = useRef(null);
     let [hobby, setHobby] = useState<string>("");
     let [hobbies, setHobbies] = useState<any[]>([]);
