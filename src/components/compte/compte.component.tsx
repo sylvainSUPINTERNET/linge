@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Redirect, useLocation } from "react-router-dom";
 import { config } from "../../configuration/api/config";
 import { ICreateUser } from "../../configuration/api/dto/ICreateUser";
@@ -27,12 +27,6 @@ interface OAuth2ClaimsGoogle extends OAuth2Claims {
 
 export const Compte = () => {
 
-    profiles.getMyProfile(localStorage.getItem('linge_id_token') as string).then( async resp => {
-        if ( resp.status === 200 ) {
-            const data = await resp.json();
-            setExistingProfile(data as IProfile);
-        }
-    }).catch( err => console.log(err))
 
     let [existingProfile, setExistingProfile] = useState<IProfile>();
 
@@ -58,6 +52,41 @@ export const Compte = () => {
         return decoded;
     }
 
+    const populateForm = (profile: IProfile) => {
+        console.log(profile); 
+
+        if ( profile.age ) {
+            setAge(profile.age as number);
+        }
+
+        if ( profile.job ) {
+            setJob(profile.job);
+        }
+
+        if ( profile.city ) {
+            setCity(profile.city);
+        }
+
+        if ( profile.country ) {
+            setCountry(profile.country)
+        }
+
+        if ( profile.miscs.length > 0 ) {
+            let hobbies = [...profile.miscs];
+            setHobbies(hobbies);
+        }
+    }
+
+    useEffect( () => {
+        profiles.getMyProfile(localStorage.getItem('linge_id_token') as string).then( async resp => {
+            if ( resp.status === 200 ) {
+                const data = await resp.json();
+                setExistingProfile(data as IProfile);
+                populateForm(data as IProfile);
+            }
+        }).catch( err => console.log(err))    
+    }, []);
+
     const [claims, setClaims] = useState<OAuth2ClaimsGoogle>(getDecoded());
     return (
         <div>
@@ -82,16 +111,16 @@ export const Compte = () => {
                                             <input type="number" className="shadow form-control mt-2" onChange={ev => {
                                                 setAge((ev.target.value as unknown as number))
                                                 setHasBeenModified(false);    
-                                            }} placeholder="age"/>
+                                            }} placeholder="age" value={age}/>
                                             <input type="text" className="shadow form-control mt-4" onChange={ev => {
                                                 setJob(ev.target.value);
                                                 setHasBeenModified(false);    
-                                            }} placeholder="job"/>
-                                            <input type="text" className="shadow form-control mt-4" placeholder="ville" onChange={ev => {
+                                            }} placeholder="job" value={job}/>
+                                            <input type="text" className="shadow form-control mt-4" placeholder="ville" value={city} onChange={ev => {
                                                 setCity(ev.target.value)
                                                 setHasBeenModified(false);    
                                             }}/>
-                                            <input type="text" className="shadow form-control mt-4" placeholder="pays" onChange={ev => {
+                                            <input type="text" className="shadow form-control mt-4" placeholder="pays" value={country} onChange={ev => {
                                                 setCountry(ev.target.value)
                                                 setHasBeenModified(false);        
                                             }}/>
