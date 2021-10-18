@@ -17,3 +17,15 @@ export interface IProfile {
 }
 
 
+export interface IProfileCreate {
+    age:number;
+    job:string;
+    city:string;
+    country:string;
+    miscs: string[];
+    ownerEmail: string;
+    latitude: number;
+    longitude: number;
+}
+
+
