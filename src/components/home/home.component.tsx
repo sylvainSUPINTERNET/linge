@@ -73,33 +73,17 @@ export const Home = () => {
 
     return (
     
-        <div className="container mt-5">
-            <div className="d-flex" style={{"flexFlow": "wrap"}}>
-
-            <div className="card m-2" style={{"width": "18rem"}}>
-            <div className="card-body">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" className="btn btn-primary">Go somewhere</a>
-            </div>
-            </div>
-            
-            <div className="card m-2" style={{"width": "18rem"}}>
-            <div className="card-body">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" className="btn btn-primary">Go somewhere</a>
-            </div>
-            </div>
-            
-            <div className="card m-2" style={{"width": "18rem"}}>
-            <div className="card-body">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" className="btn btn-primary">Go somewhere</a>
-            </div>
-            </div>
-
+        <div className="container" style={{ marginTop: "8em"}}> 
+            <div className="d-flex mt-5" style={{"flexFlow": "wrap", justifyContent:"center"}}>
+                <div>
+                    <h1 className="text-center">Remous <img style={{width:"64px", "borderRadius": "50%"}} src="https://banner2.cleanpng.com/20210510/jp/transparent-water-drop-icon-nature-icon-rain-icon-6099cd8dcf2be3.6171995716206923658486.jpg"></img></h1>
+                    <h1 className="text-center mt-5">Pas de <code><del>blabla</del></code>, juste des <code>rencontres</code>.</h1>
+                </div>
+            </div> 
+            <div className="d-flex mt-2" style={{"flexFlow": "wrap", justifyContent:"center"}}>
+                <div style={{marginTop: "5em"}}>
+                    <a type="button" className="btn btn-outline-info btn-lg shadow" href="/rencontre" >Je veux rencontré !</a>
+                </div>
             </div> 
         </div>
     )

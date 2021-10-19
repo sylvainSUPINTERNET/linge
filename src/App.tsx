@@ -10,6 +10,10 @@ import { Home } from './components/home/home.component';
 import { Compte } from './components/compte/compte.component';
 import { GuardRoute } from './components/guard/Guard.component';
 import { Authenticate } from './components/authenticate/authenticate.component';
+import { Rencontre } from './components/rencontre/rencontre.component';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
@@ -31,6 +35,7 @@ function App() {
               <Authenticate/>
             </Route>
             <GuardRoute exact path="/compte" protectedComponent={Compte}/>
+            <GuardRoute exact path="/rencontre" protectedComponent={Rencontre}/>
           </Switch>
         </div>
       </Router>

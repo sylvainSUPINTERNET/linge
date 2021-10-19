@@ -73,6 +73,7 @@ export const Compte = () => {
                     toast("Une erreur est survenue");
                     setHasBeenModified(true);
                 } else {
+                    setHasBeenModified(true);
                     toast("Mise à jour OK !");
                 }
                  
