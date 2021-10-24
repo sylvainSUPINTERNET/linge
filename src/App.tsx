@@ -13,6 +13,8 @@ import { Authenticate } from './components/authenticate/authenticate.component';
 import { Rencontre } from './components/rencontre/rencontre.component';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Team } from './components/team/team.component';
+import { Join } from './components/join/join.component';
 
 
 function App() {
@@ -23,8 +25,8 @@ function App() {
 
           <nav style={{display:"flex", justifyContent:"center"}}>
             <Link className="m-2 nav-item nav-link" style={{"color": "#182C61", fontSize: "24px"}} to="/">Accueil</Link>
-            <Link className="m-2 nav-item nav-link" style={{"color": "#182C61", fontSize: "24px"}} to="/compte">Compte</Link>
-            <Link className="m-2 nav-item nav-link" style={{"color": "#182C61", fontSize: "24px"}} to="/FAQ">FAQ</Link>
+            {/* <Link className="m-2 nav-item nav-link" style={{"color": "#182C61", fontSize: "24px"}} to="/compte">Compte</Link> */}
+            <Link className="m-2 nav-item nav-link" style={{"color": "#182C61", fontSize: "24px"}} to="/team">Equipe</Link>
           </nav>
 
           <Switch>
@@ -36,6 +38,10 @@ function App() {
             </Route>
             <GuardRoute exact path="/compte" protectedComponent={Compte}/>
             <GuardRoute exact path="/rencontre" protectedComponent={Rencontre}/>
+            <GuardRoute exact path="/team" protectedComponent={Team} />
+            <Route exact path="/team/join">
+              <Join/>
+            </Route>
           </Switch>
         </div>
       </Router>

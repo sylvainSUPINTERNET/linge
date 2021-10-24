@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useState } from "react";
 import { googleOauthConfig } from "../../configuration/oauth2/google.oauth2";
 import { config } from "../../configuration/api/config";
 import { ICreateUser } from "../../configuration/api/dto/ICreateUser";
-
+import {GiCoffeeBeans} from "react-icons/gi"
 export const Home = () => {
     // let location = useLocation();
     // const search = location.search;
@@ -73,16 +73,24 @@ export const Home = () => {
 
     return (
     
-        <div className="container" style={{ marginTop: "8em"}}> 
-            <div className="d-flex mt-5" style={{"flexFlow": "wrap", justifyContent:"center"}}>
+        <div className="container" style={{ marginTop: "3em"}}> 
+            <div className="d-flex" style={{"flexFlow": "wrap", justifyContent:"center"}}>
                 <div>
-                    <h1 className="text-center">Remous <img style={{width:"64px", "borderRadius": "50%"}} src="https://banner2.cleanpng.com/20210510/jp/transparent-water-drop-icon-nature-icon-rain-icon-6099cd8dcf2be3.6171995716206923658486.jpg"></img></h1>
-                    <h1 className="text-center mt-5">Pas de <code><del>blabla</del></code>, juste des <code>rencontres</code>.</h1>
+                    {/* <h1 className="text-center">Remous <img style={{width:"64px", "borderRadius": "50%"}} src="https://banner2.cleanpng.com/20210510/jp/transparent-water-drop-icon-nature-icon-rain-icon-6099cd8dcf2be3.6171995716206923658486.jpg"></img></h1> */}
+                    <h1 className="text-center display-3 mb-5">Rem<GiCoffeeBeans color={"#6b3e2e"}/>us</h1>
+                    <div style={{"display":"flex", justifyContent:"center"}}>
+                    <img src="https://i.pinimg.com/originals/47/3b/a5/473ba5ab819872891cded89e41ff4001.gif" style={{width:"20em"}}/>
+                    </div>
+
+                    {/* <h1 className="text-center mt-5">Pas de <code><del>blabla</del></code>, juste des <code>rencontres</code>.</h1> */}
+                    <div style={{"marginTop": "3em"}}>
+                    <h1 className="text-center mt-5 display-4">Qui prépare le <code>café</code> aujourd'hui ?</h1>
+                    </div>
                 </div>
             </div> 
             <div className="d-flex mt-2" style={{"flexFlow": "wrap", justifyContent:"center"}}>
                 <div style={{marginTop: "5em"}}>
-                    <a type="button" className="btn btn-outline-info btn-lg shadow" href="/rencontre" >Je veux rencontré !</a>
+                    {/* <a type="button" className="btn btn-outline-info btn-lg shadow" href="/rencontre" >Je veux rencontré !</a> */}
                 </div>
             </div> 
         </div>
