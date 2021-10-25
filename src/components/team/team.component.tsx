@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react"
 import { Button, Modal, Spinner } from "react-bootstrap";
+import { ICreateInvit } from "../../configuration/api/dto/ICreateInvit";
 import { ICreateTeam } from "../../configuration/api/dto/ICreateTeam";
 import { IMember } from "../../configuration/api/dto/IMember";
+import { invitApi } from "../../configuration/api/invit/invit.api";
 import { teamApi } from "../../configuration/api/team/team.api";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 function MyVerticallyCenteredModal(props: any) {
@@ -73,8 +76,24 @@ export const Team = () => {
     }
 
     const sendInvit = async (ev:any) => {
-
-        console.log("Send invit to ", sendEmail);
+        const payload:ICreateInvit = {
+            teamId: team.id,
+            createdBy: team.owner as string,
+            forUser:sendEmail
+        };
+        try {
+            const resp = await invitApi.add(localStorage.getItem("linge_id_token") as string, payload);
+            if ( resp.status === 200 ) {
+                toast("Email envoyé avec succès !")
+                setSendEmail("")
+            } else if ( resp.status === 204 ) {    
+                toast("Déjà une invitation en attente ...")
+            } else {
+                toast("Oups, une erreur est survenue !")
+            }
+        } catch ( e ) {
+            toast("Oups, une erreur est survenue !")
+        }
 
     }
 
@@ -130,8 +149,6 @@ export const Team = () => {
     },[]);
 
     return <div className="container mt-5">
-
-        {JSON.stringify(team)}
         {
             (team === null) && <div>
                 
@@ -155,6 +172,7 @@ export const Team = () => {
             team && team !== null  && 
             <div>
             <div style={{"display":"flex", "justifyContent": "center"}}>
+            <ToastContainer/>
             <div className="text-center">
                 <h4 className="mb-3">Invité quelqu'un</h4>
                 <div className="form-group">
@@ -206,8 +224,7 @@ export const Team = () => {
                                     team.members.map( (member:IMember) => {
                                         return <>
                                             <div className="shadow p-3 rounded">
-                                                <button className="btn btn-danger" style={{float:"right"}}>Retirer</button>
-                                                <div>{member.forUser}</div>
+                                                <div>{member.forUser}<button className="btn btn-sm btn-danger m-2">X</button></div>
                                             </div>                                         
                                         </>
                                     })

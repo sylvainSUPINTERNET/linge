@@ -1,0 +1,3 @@
+=> If user click on old link from old invit email, should get redirect with error message 
+
+=> if user get redrieect after click eamil should display success message

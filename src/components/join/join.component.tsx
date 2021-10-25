@@ -6,12 +6,13 @@ export const Join = (props:any) => {
     const join = async (ticket: string) => {
         try {
             const data = await teamApi.joinTeam(ticket);
-            console.log(data);
             if ( data.status === 200 ) {
-                console.log("yes")
                 window.location.href = "/";
+            } else {
+                const j = await data.json()
             }
         } catch ( e ) {
+            console.log(e);
                 window.location.href = "/";
 
             console.log(e);
