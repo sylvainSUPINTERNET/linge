@@ -49,14 +49,62 @@ function MyVerticallyCenteredModal(props: any) {
     );
   }
 
+  function MyDeleteVerticallyCenteredModal(props: any) {
+
+    const confirmDelete = async () => {
+        
+        console.log(props.onHide(true));
+        console.log("click")
+    }
+
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body> 
+              {
+                  props.invited !== null &&  <h4 className="text-center">Etes-vous sûr de vouloir supprimer {props.invited.forUser} ?</h4>
+              }
+        </Modal.Body>
+        <Modal.Footer>
+            <button className=" btn btn-md btn-success" onClick={confirmDelete}>Confirmer</button>
+            <button className=" btn btn-md btn-danger">Refuser</button>
+
+          {/* <button className="btn btn-primary" type="button" onClick={props.onAdd} disabled={props.isLoading}>
+              <>
+              {
+                  props.isLoading && <span className="spinner-border spinner-border-sm" style={{marginRight: "0.5em"}} role="status" aria-hidden="true"></span> 
+              }
+              <span className="sr-only">Ajouter</span>
+              </>
+
+            </button> */}
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  
+
 export const Team = () => {
     const [createTeamName, setCreateTeamName] = useState<string>("");
 
     const [team, setTeam] = useState<any>();
     const [modalShow, setModalShow] = useState(false);
+    const [modalDeleteShow, setModalDeleteShow] = useState(false);
+    const [deleteUserTarget, setDeleteUserTarget] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isSend, setIsSend] = useState<boolean>(false);
     const [sendEmail, setSendEmail] = useState<any>("");
+    const [radioValue, setRadioValue] = useState<string>("");
 
     const getMyTeam = async () => {
         try {
@@ -73,6 +121,16 @@ export const Team = () => {
             alert("Une erreur est survenue")
         }
 
+    }
+
+    const radioChangeDay = (ev:any) => {
+        //@ts-ignore
+        setRadioValue("daily");
+    } 
+
+    const constRadioChangeWeek = (ev:any) => {
+        //@ts-ignore
+        setRadioValue("weekly")
     }
 
     const sendInvit = async (ev:any) => {
@@ -95,6 +153,11 @@ export const Team = () => {
             toast("Oups, une erreur est survenue !")
         }
 
+    }
+
+    const deleteUser = (ev:any, member:any) => {
+        setDeleteUserTarget(member);
+        setModalDeleteShow(true);
     }
 
     const convertTimestampToDate = (timestamp:any) => {
@@ -164,13 +227,16 @@ export const Team = () => {
                     setIsLoading={setIsLoading}
                     isLoading={isLoading}
                 />
-
             </div>
         }
+
+    
 
         {
             team && team !== null  && 
             <div>
+
+
             <div style={{"display":"flex", "justifyContent": "center"}}>
             <ToastContainer/>
             <div className="text-center">
@@ -185,7 +251,7 @@ export const Team = () => {
             </div>
     
             <div className="mt-5">
-                <h4 className="text-center ">Membres</h4>
+                <h4 className="">Membres - {team.name}</h4>
 
                 {
                     team && team !== null && (team["members"] === null || team["members"].length <= 0) && 
@@ -198,6 +264,7 @@ export const Team = () => {
                             Membres : 0 / {team.maxSlot}
                         </small>
                     </div>
+                    
 
                     </div>
 
@@ -211,6 +278,13 @@ export const Team = () => {
 
                 {
                     team && team !== null && team["members"].length > 0 && <div className="shadow  p-4">
+                        <MyDeleteVerticallyCenteredModal
+                            show={modalDeleteShow}
+                            onHide={() => setModalDeleteShow(false)}
+                            invited={deleteUserTarget}
+
+                        />
+
                         <h6>
                             Fondateur : {team.owner}
                         </h6>
@@ -218,13 +292,34 @@ export const Team = () => {
                             Membres : {team.members.length} / {team.maxSlot}
                         </small>
 
+                        <div className="mt-4">
+                            <h6 className="">Fréqueunce des notifications</h6>
+                            <div>
+
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked={team.notifFreq === "daily"} onChange={radioChangeDay}/>
+                                <label className="form-check-label">
+                                    Jour
+                                </label>
+                                </div>
+                                <div className="form-check">
+                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked={team.notifFreq === "weekly"} onChange={constRadioChangeWeek}/>
+                                <label className="form-check-label">
+                                    Semaine
+                                </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="p-3 mt-2 rounded">
                             <div style={{"display":"flex", "flexFlow":"wrap"}}>
                                 {
                                     team.members.map( (member:IMember) => {
                                         return <>
-                                            <div className="shadow p-3 rounded">
-                                                <div>{member.forUser}<button className="btn btn-sm btn-danger m-2">X</button></div>
+                                            <div className="shadow p-3 rounded" style={{marginLeft: "1em"}}>
+                                                <div>{member.forUser}<button className="btn btn-sm btn-danger" style={{"borderRadius": "50%", "marginLeft": "0.3em"}} onClick={ (ev) => {
+                                                    deleteUser(ev, member)
+                                                }}>X</button></div>
                                             </div>                                         
                                         </>
                                     })

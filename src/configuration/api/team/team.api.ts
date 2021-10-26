@@ -1,5 +1,6 @@
 import { config } from "../config"
 import { ICreateTeam } from "../dto/ICreateTeam";
+import { IUpdateNotificationFreq } from "../dto/IUpdateNotificationFreq";
 
 export const teamApi = {
     "createTeam": async (teamPayload:ICreateTeam, idToken:string):Promise<any> => {
@@ -31,5 +32,15 @@ export const teamApi = {
                 "Content-type":"application/json"
             }
         });
+    },
+    "notifFreqUpdate": async(idToken: string, payload: IUpdateNotificationFreq):Promise<any> => {
+        return fetch(`${config.URL}/teams/notifications/freq`, {
+            "method":"PUT",
+            "body": JSON.stringify(payload),
+            "headers": {
+                "Content-type":"application/json",
+                "Authorization": `Bearer ${idToken}`
+            }
+        })
     }
 };

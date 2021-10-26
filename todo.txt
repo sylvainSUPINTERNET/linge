@@ -1,3 +1,24 @@
 => If user click on old link from old invit email, should get redirect with error message 
 
 => if user get redrieect after click eamil should display success message
+
+
+
+// features: 
+
+Choisissez votre fréqueunce de rappel
+
+matinal 8h
+
+classique 9h
+
+lève tard 10h
+
+
+Rotation : 
+
+aléatoire ( attention aux injustices !)
+
+classique ( journalier )
+
+semaine
