@@ -297,13 +297,13 @@ export const Team = () => {
                             <div>
 
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked={team.notifFreq === "daily"} onChange={radioChangeDay}/>
+                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={radioChangeDay}/>
                                 <label className="form-check-label">
                                     Jour
                                 </label>
                                 </div>
                                 <div className="form-check">
-                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked={team.notifFreq === "weekly"} onChange={constRadioChangeWeek}/>
+                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={constRadioChangeWeek}/>
                                 <label className="form-check-label">
                                     Semaine
                                 </label>
