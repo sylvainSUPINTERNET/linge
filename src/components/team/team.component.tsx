@@ -105,6 +105,7 @@ export const Team = () => {
     const [isSend, setIsSend] = useState<boolean>(false);
     const [sendEmail, setSendEmail] = useState<any>("");
     const [radioValue, setRadioValue] = useState<string>("");
+    const [hasChanged, setHasChanged] = useState<boolean>(true);
 
     const getMyTeam = async () => {
         try {
@@ -126,11 +127,16 @@ export const Team = () => {
     const radioChangeDay = (ev:any) => {
         //@ts-ignore
         setRadioValue("daily");
+
+        setHasChanged(false);
     } 
 
     const constRadioChangeWeek = (ev:any) => {
         //@ts-ignore
         setRadioValue("weekly")
+
+        setHasChanged(false);
+
     }
 
     const sendInvit = async (ev:any) => {
@@ -156,8 +162,16 @@ export const Team = () => {
     }
 
     const deleteUser = (ev:any, member:any) => {
-        setDeleteUserTarget(member);
-        setModalDeleteShow(true);
+        console.log(member);
+        console.log(team);
+        let s = new Set(team.members);
+        s.delete(member);
+        //@ts-ignore
+        team.members = [...s];
+        setTeam(team);
+
+        //setDeleteUserTarget(member);
+        //setModalDeleteShow(true);
     }
 
     const convertTimestampToDate = (timestamp:any) => {
@@ -208,6 +222,7 @@ export const Team = () => {
     }
 
     useEffect( () => {
+        console.log("use effect")
         getMyTeam()
     },[]);
 
@@ -296,18 +311,40 @@ export const Team = () => {
                             <h6 className="">Fréqueunce des notifications</h6>
                             <div>
 
-                            <div className="form-check">
-                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={radioChangeDay}/>
-                                <label className="form-check-label">
-                                    Jour
-                                </label>
-                                </div>
-                                <div className="form-check">
-                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={constRadioChangeWeek}/>
-                                <label className="form-check-label">
-                                    Semaine
-                                </label>
-                                </div>
+                                {
+                                    team.notifFreq === "daily" && <>
+                                        <div className="form-check">
+                                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={radioChangeDay} checked/>
+                                            <label className="form-check-label">
+                                                Jour
+                                            </label>
+                                        </div>
+                                        <div className="form-check">
+                                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={constRadioChangeWeek}/>
+                                            <label className="form-check-label">
+                                                Semaine
+                                            </label>
+                                        </div>
+                                    </>
+                                }
+
+                                
+                                {
+                                    team.notifFreq === "weekly" && <>
+                                        <div className="form-check">
+                                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={radioChangeDay}/>
+                                            <label className="form-check-label">
+                                                Jour
+                                            </label>
+                                        </div>
+                                        <div className="form-check">
+                                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={constRadioChangeWeek} checked/>
+                                            <label className="form-check-label">
+                                                Semaine
+                                            </label>
+                                        </div>
+                                    </>
+                                }
                             </div>
                         </div>
 
@@ -326,10 +363,19 @@ export const Team = () => {
                                 }
                             </div>   
                         </div>
+                        
+                        <div style={{display: "flex", justifyContent:"right"}}>
+                            <button className="btn btn-md btn-primary mt-2" disabled={hasChanged}>Mettre à jour</button>
+                        </div>
+                        
+
 
                         </div>
+
+                        
                 }
             </div>
+
 
 
             </div>
